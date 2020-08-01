@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+export CONTECO_LABEL="rest.elasticsearch - Conteco"
+export CONTECO_DESCRIPTION="The Conteco REST API client for ElasticSearch."
+
+export CONTECO_TYPE="rest"
+export CONTECO_NAME="elasticsearch"
+export CONTECO_TAG="v1.0.0"
+export CONTECO_TAG_TYPE="incremental"
+
+export CONTECO_BASE="rest.base"
+export CONTECO_BUILD="image"
