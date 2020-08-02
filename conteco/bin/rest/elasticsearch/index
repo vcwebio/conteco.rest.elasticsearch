@@ -20,7 +20,7 @@
     ;;
     put)
       export CONTECO_REST_BASE_URLSUFFIX="$1"; shift;
-      export CONTECO_REST_BASE_REQUESTBODY="$"
+      export CONTECO_REST_BASE_REQUESTBODY="$1"
     ;;
     *)
       abort="true"
@@ -29,7 +29,7 @@
   esac
 
   if [[ "$1" == "--output" ]] ; then outputFile="$2"; shift; shift; fi
-  if [[ "$abort" == "" ]] ; then execute-request "$basePath/${method}.request" ${CONTECO_REST_BASE_PROTOCOL} ${CONTECO_REST_BASE_PORT} $outputFile; fi
+  if [[ "$abort" == "" ]] ; then .base execute-request "$basePath/${method}.request" $outputFile; fi
 
   executionplane-complete
 )
