@@ -3,31 +3,35 @@
   export PATH="$CONTECO_EXECUTIONPLANE_APIINTERNALPATH_ELASTICSEARCH"
   . executionplane-invoke "$0 $@"
 
+  export CONTECO_REST_BASE_REQUESTLINE="$@"
   method="$1"; shift;
-  reqFile=$(mktemp /tmp/curl.reqFile.XXXXXX); resFile=$(mktemp /tmp/curl.resFile.XXXXXX);
   basePath="/conteco/assets/elasticsearch/index"
+
   case $method in
     --info)
+      abort="true"
       executionplane-error "No implementation for modeco deploy --info: $@"
     ;;
     delete)
-      export CONTECO_REST_ELASTICSEARCH_SUFFIX="$1"
-      cat $basePath/delete.request | envsubst > $reqFile
+      export CONTECO_REST_BASE_URLSUFFIX="$1"; shift;
     ;;
     get)
-      export CONTECO_REST_ELASTICSEARCH_SUFFIX="$1"
-      cat $basePath/get.request | envsubst > $reqFile
+      export CONTECO_REST_BASE_URLSUFFIX="$1"; shift;
     ;;
     put)
-    export CONTECO_REST_ELASTICSEARCH_SUFFIX="$1"
-    export CONTECO_REST_ELASTICSEARCH_REQUESTBODY="$2"
-      cat $basePath/put.request | envsubst > $reqFile
+      export CONTECO_REST_BASE_URLSUFFIX="$1"; shift;
+      export CONTECO_REST_BASE_REQUESTBODY="$"
     ;;
     *)
+      abort="true"
       executionplane-error "invalid API method: $method"
     ;;
   esac
-  if [[ "$abort" == "" ]] ; then .base execute-curl $reqFile $resFile ${CONTECO_REST_ELASTICSEARCH_PROTOCOL} ${CONTECO_REST_ELASTICSEARCH_PORT}; fi
-  rm $reqFile; rm $resFile;
+
+  if [[ "$1" == "--output" ]] ; then outputFile="$2"; shift; shift; fi
+  if [[ "$abort" == "" ]] ; then execute-request "$basePath/${method}.request" ${CONTECO_REST_BASE_PROTOCOL} ${CONTECO_REST_BASE_PORT} $outputFile; fi
+
   executionplane-complete
 )
+
+# basePath,
